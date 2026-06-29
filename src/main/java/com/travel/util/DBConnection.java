@@ -13,10 +13,23 @@ public class DBConnection {
 
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            connection = DriverManager.getConnection(
-                    "jdbc:mysql://localhost:3306/travel_tourism_db",
-                    "root",
-                    "rekha@2005");
+            String host = System.getenv("DB_HOST");
+            String db = System.getenv("DB_NAME");
+            String user = System.getenv("DB_USER");
+            String pass = System.getenv("DB_PASSWORD");
+
+            if (host == null || host.isEmpty()) {
+                // Local Tomcat
+                host = "localhost:3306";
+                db = "travel_tourism_db";
+                user = "root";
+                pass = "rekha@2005";
+            }
+
+            String url = "jdbc:mysql://" + host + "/" + db
+                    + "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+
+            connection = DriverManager.getConnection(url, user, pass);
 
         } catch (Exception e) {
             e.printStackTrace();
